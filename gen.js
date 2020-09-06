@@ -1,14 +1,20 @@
 const fs = require('fs');
+const layoutgen = require('./layout_generator')
 
 const dictionary_path = "dict/dic-nico-intersection-pixiv.txt"
 const text = fs.readFileSync(dictionary_path, 'utf8');
 const lines = text.toString().split('\n').slice(8);
 // console.log(lines.length)
 
-const valid_words = lines.map(line => line.split('\t')[0])
+// [Regex Tester - Javascript, PCRE, PHP](https://www.regexpal.com/)
+const lines2 = lines.map(line => line.split('\t')[0])
     .filter(word => word.match(/^[ぁ-んー]+$/))
+    .filter(word => !word.match(/^([ぁ-んー]{1,2})\1$/))
+    .filter(word => !word.match(/くん$/))
     .filter(word => word.length <= 8)
-console.log(valid_words.length)
+    .filter(word => word.length >= 4)
+const valid_words = Array.from(new Set(lines2))
+// console.log(valid_words.length)
 
 const characters = valid_words.reduce((a, b) => a + b)
 const note = {};
@@ -45,16 +51,25 @@ console.log(n_char)
 const filtered_words = valid_words.filter(word => word.split("").map(c => n_char.includes(c)).reduce((a, b) => a && b))
 console.log(filtered_words.length)
 
-function shuffle(array) {
-    for (var i = array.length - 1; i > 0; i--) {
-        var r = Math.floor(Math.random() * (i + 1));
-        var tmp = array[i];
-        array[i] = array[r];
-        array[r] = tmp;
-    }
-}
-shuffle(filtered_words)
-console.log(filtered_words.slice(0, 4))
-
 const output_path = "temp.txt"
 fs.writeFileSync(output_path, filtered_words.join('\n'), 'utf8');
+
+// visualize
+
+function convert_to_json(word_list) {
+    var json_data = [];
+    for (let i in word_list) {
+        if (word_list[i].length > 0) {
+            json_data[i] = { "answer": word_list[i].toLowerCase() };
+        }
+    }
+
+    return json_data;
+}
+
+const input_json = convert_to_json(filtered_words);
+
+// Output data
+const layout = layoutgen.generateLayout(input_json);
+const output_html = layout.table_string.replace(/-/g, '⬛').replace(/<br>/g, '\n')
+console.log(output_html)

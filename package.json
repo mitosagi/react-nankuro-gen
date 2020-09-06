@@ -7,7 +7,8 @@
     "test": "echo \"Error: no test specified\" && exit 1",
     "download-dictionary": "wget -P dict https://cdn.ncaq.net/dic-nico-intersection-pixiv.txt",
     "install-server": "sudo npm install -g http-server",
-    "gen": "node gen.js"
+    "gen": "node gen.js",
+    "start": "http-server"
   },
   "repository": {
     "type": "git",
