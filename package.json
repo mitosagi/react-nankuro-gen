@@ -1,0 +1,22 @@
+{
+  "name": "crossword-nico-pixiv",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "download-dictionary": "wget -P dict https://cdn.ncaq.net/dic-nico-intersection-pixiv.txt",
+    "install-server": "sudo npm install -g http-server"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/mitosagi/crossword-nico-pixiv.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/mitosagi/crossword-nico-pixiv/issues"
+  },
+  "homepage": "https://github.com/mitosagi/crossword-nico-pixiv#readme",
+  "dependencies": {}
+}
