@@ -76,6 +76,7 @@
           var cols = layout.cols;
           var table = layout.table; // table as two-dimensional array
           var output_html = layout.table_string; // table as plain text (with HTML line breaks)
+          output_html = output_html.replace(/-/g, '■')
           var output_json = layout.result; // words along with orientation, position, startx, and starty
 
           // Word search data
@@ -83,7 +84,7 @@
           var word_search = create_word_search(alphabet, output_html);
 
           // Display result
-          document.getElementById("content").innerHTML = "<h3>Output JSON</h3><br>" + JSON.stringify(output_json) + "<br><br><h3>Output Html</h3><br>" + output_html + "<br><h3>Extra Output: Word Search</h3><br>" + word_search + "<br>";
+          document.getElementById("content").innerHTML = "<h3>Output JSON</h3><br>" + JSON.stringify(output_json) + "<br><br><h3>Output Html</h3><br><span style=\"font-family:monospace;\">" + output_html + "</span><br><h3>Extra Output: Word Search</h3><br>" + word_search + "<br>";
         }
       }
     </script>
