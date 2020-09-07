@@ -1,5 +1,6 @@
+
 const fs = require('fs');
-const layoutgen = require('./layout_generator')
+var clg = require("crossword-layout-generator");
 
 const dictionary_path = "dict/dic-nico-intersection-pixiv.txt"
 const text = fs.readFileSync(dictionary_path, 'utf8');
@@ -10,6 +11,7 @@ const lines = text.toString().split('\n').slice(8);
 const lines2 = lines.map(line => line.split('\t')[0])
     .filter(word => word.match(/^[ぁ-んー]+$/))
     .filter(word => !word.match(/^([ぁ-んー]{1,2})\1$/))
+    .filter(word => !word.match(/^([ぁ-んー]{1})\1\1$/))
     .filter(word => !word.match(/くん$/))
     .filter(word => word.length <= 8)
     .filter(word => word.length >= 4)
@@ -45,7 +47,7 @@ function choose_n(arr, num) {
     return ret_arr
 }
 
-const n_char = choose_n(note, 12 + 3)
+const n_char = choose_n(note, 15 + 3)
 console.log(n_char)
 
 const filtered_words = valid_words.filter(word => word.split("").map(c => n_char.includes(c)).reduce((a, b) => a && b))
@@ -70,6 +72,8 @@ function convert_to_json(word_list) {
 const input_json = convert_to_json(filtered_words);
 
 // Output data
-const layout = layoutgen.generateLayout(input_json);
+const layout = clg.generateLayout(input_json);
 const output_html = layout.table_string.replace(/-/g, '⬛').replace(/<br>/g, '\n')
 console.log(output_html)
+
+const output_html2 = output_html
