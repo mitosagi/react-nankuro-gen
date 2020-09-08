@@ -10,15 +10,34 @@ async function genarate(char_count) {
 
     function load(text) {
         const lines = text.toString().split('\n').slice(8);
-
+        const capitalize = {
+            'ぁ': 'あ',
+            'ぃ': 'い',
+            'ぅ': 'う',
+            'ぇ': 'え',
+            'ぉ': 'お',
+            //'っ': 'つ',
+            //'ゃ': 'や',
+            //'ゅ': 'ゆ',
+            //'ょ': 'よ',
+            'ゎ': 'わ'
+        }
         // [Regex Tester - Javascript, PCRE, PHP](https://www.regexpal.com/)
         const lines2 = lines.map(line => line.split('\t')[0])
-            .filter(word => word.match(/^[ぁ-んー]+$/))
-            .filter(word => !word.match(/^([ぁ-んー]{1,2})\1$/))
-            .filter(word => !word.match(/^([ぁ-んー]{1})\1\1$/))
-            .filter(word => !word.match(/くん$/))
             .filter(word => word.length <= 8)
             .filter(word => word.length >= 4)
+            .filter(word => word.match(/^[ぁ-わをんー]+$/))
+            .filter(word => !word.match(/^([ぁ-わをんー]{1,2})\1$/))
+            .filter(word => !word.match(/^([ぁ-わをんー]{1})\1\1$/))
+            .filter(word => !word.match(/くん$/))
+            .map(word => word.split("")
+                .map(char => {
+                    if (capitalize[char]) {return capitalize[char]}
+                    else {return char}
+                })
+                .join("")
+            )
+
         const valid_words = Array.from(new Set(lines2))
 
         const characters = valid_words.reduce((a, b) => a + b)
