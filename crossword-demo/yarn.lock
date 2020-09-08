@@ -3285,6 +3285,11 @@ cross-spawn@^6.0.0, cross-spawn@^6.0.5:
     shebang-command "^1.2.0"
     which "^1.2.9"
 
+crossword-layout-generator@^0.1.1:
+  version "0.1.1"
+  resolved "https://registry.yarnpkg.com/crossword-layout-generator/-/crossword-layout-generator-0.1.1.tgz#88fe7cab929a95b38ae129665c13928d4e7d1257"
+  integrity sha512-wunaTcpzDc1UL7iC77ckh4mMEjFuBDMYIKhJn3yq6b7jvHu5zcxe17cGh4Pv1VbLu1BfC6kgDV0IowfqDUm2sg==
+
 crypto-browserify@^3.11.0:
   version "3.12.0"
   resolved "https://registry.yarnpkg.com/crypto-browserify/-/crypto-browserify-3.12.0.tgz#396cf9f3137f03e4b8e532c58f698254e00f80ec"
@@ -8667,6 +8672,11 @@ react-scripts@3.4.3:
     workbox-webpack-plugin "4.3.1"
   optionalDependencies:
     fsevents "2.1.2"
+
+react-simple-keyboard@^2.4.10:
+  version "2.4.10"
+  resolved "https://registry.yarnpkg.com/react-simple-keyboard/-/react-simple-keyboard-2.4.10.tgz#81cd516cd7b556e16143253b7c0de5d11f4acfa5"
+  integrity sha512-1iau3lNFCnnzPRLkEuQ0UenfiLgk2FUVQwLYF/xzPgWFCHjqa8t+8fF9k5xRdv3mDHNyzSqHZljrsSqZCL6s6g==
 
 react@^16.13.1:
   version "16.13.1"

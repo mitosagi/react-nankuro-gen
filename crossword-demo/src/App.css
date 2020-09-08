@@ -36,3 +36,18 @@
     transform: rotate(360deg);
   }
 }
+
+.Table {
+  font-family: monospace;
+  font-size: 24px;
+  user-select: none;
+}
+
+.selected {
+  background-color: #66CCCC
+}
+
+.keyboard {
+  margin: 0 auto;
+  width: 500px;
+}
