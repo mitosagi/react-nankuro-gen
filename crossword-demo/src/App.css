@@ -41,6 +41,7 @@
   font-family: monospace;
   font-size: 24px;
   user-select: none;
+  border: dashed 1px
 }
 
 .selected {
@@ -54,8 +55,26 @@
 
 .blue {
   color: blue;
+  border-color: black;
 }
 
 .complete {
-  background-color: grey
+  background-color: grey;
 }
+
+.disabled {
+  background-color: lightgrey !important;
+}
+
+.Table .box {
+  background-color: black;
+  /* color: white; */
+}
+
+.disabled_ans {
+  background-color: lightblue !important;
+}
+
+/* .row {
+  line-height: 1
+} */
