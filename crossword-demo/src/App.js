@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import './App.css';
+import './App.scss';
 import { genarate } from './gen';
 import Keyboard from "react-simple-keyboard";
 import "react-simple-keyboard/build/css/index.css";
@@ -81,13 +81,15 @@ class App extends Component {
     ].map(row => row.split("").join(" ")).concat(["{space}"])
     return (
       <div className="App">
-        {this.state.data.map((row, i) =>
-          <div key={i} className={"row" + ((this.state.complete) ? " complete" : "")}>
-            {row.map((square, j) =>
-              <Cell key={j} text={square} question={this.state.question} answer={this.state.answer} clicked={this.clicked} selected={this.state.selected}></Cell>
-            )}
-          </div>
-        )}
+        <div className="column">
+          {this.state.data.map((row, i) =>
+            <div key={i} className={"row" + ((this.state.complete) ? " complete" : "")}>
+              {row.map((square, j) =>
+                <Cell key={j} text={square} question={this.state.question} answer={this.state.answer} clicked={this.clicked} selected={this.state.selected}></Cell>
+              )}
+            </div>
+          )}
+        </div>
         <div className="keyboard">
           <Keyboard onKeyPress={input => this.onKeyPress(input)} layout={{ default: kana50 }}
             buttonTheme={[

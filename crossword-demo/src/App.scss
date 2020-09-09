@@ -32,6 +32,7 @@
   from {
     transform: rotate(0deg);
   }
+
   to {
     transform: rotate(360deg);
   }
@@ -41,8 +42,25 @@
   font-family: monospace;
   font-size: 24px;
   user-select: none;
-  border: dashed 1px
+  border: dashed 1px;
 }
+
+@for $l from 1 through 50 {
+  .row:nth-child(#{$l}) {
+    animation: fadein #{($l - 1) * 0.1}s;
+  }
+}
+
+@keyframes fadein {
+  from {
+    opacity: 0;
+  }
+
+  to {
+    opacity: 1;
+  }
+}
+
 
 .selected {
   background-color: #66CCCC
