@@ -30,8 +30,13 @@
   border: dashed 1px;
 }
 
+.cw-cell:hover {
+  outline: blue solid 3px;
+  outline-offset: -1px;
+}
+
 .cw-cell_selected {
-  background-color: #66CCCC
+  background-color: #ced3ff
 }
 
 .solved .cw-cell_selected {
@@ -106,5 +111,5 @@
 }
 
 .disabled_ans {
-  background-color: lightblue !important;
+  background-color: #cacfff !important;
 }
