@@ -1,17 +1,24 @@
 import clg from 'crossword-layout-generator'
 
 let isInitialized = false
-let words
-let char_dict
-let reverse_dict
+let quality_words
+let char_freq
+let kana_kanji_dict
+const str_kuromasu = '-'
 
-async function genarate(char_count) {
-    if (isInitialized) return Promise.resolve(generate_crossword(false, char_count, words, char_dict))
-    isInitialized = true
+async function get_crossword(number_of_char_types) {
+    if (isInitialized) {
+        return Promise.resolve(generate_crossword(number_of_char_types, quality_words, char_freq))
+    } else {
+        isInitialized = true
+        return fetch('dic-nico-intersection-pixiv.txt')
+            .then(async response => [quality_words, char_freq, kana_kanji_dict] = load(await response.text()))
+            .then(() => generate_crossword(number_of_char_types, quality_words, char_freq))
+    }
 
-    function load(text) {
-        const lines = text.toString().split('\n').slice(8);
-        const capitalize = {
+    function load(word_list) {
+        const lines = word_list.toString().split('\n').slice(8);
+        const replace = {
             'ぁ': 'あ',
             'ぃ': 'い',
             'ぅ': 'う',
@@ -24,50 +31,37 @@ async function genarate(char_count) {
             'ゎ': 'わ'
         }
 
-        const r_dict = {}
+        const kana_kanji_dict = {}
         lines.forEach(line => {
             const spl = line.split('\t')
             spl[0] = spl[0].split("").map(char => {
-                if (capitalize[char]) { return capitalize[char] }
+                if (replace[char]) { return replace[char] }
                 else { return char }
             }).join("")
-            r_dict[spl[0]] = spl[1]
+            kana_kanji_dict[spl[0]] = spl[1]
         })
 
         // [Regex Tester - Javascript, PCRE, PHP](https://www.regexpal.com/)
-        const lines2 = lines.map(line => line.split('\t')[0])
-            .filter(word => word.length <= 8)
-            .filter(word => word.length >= 4)
-            .filter(word => word.match(/^[ぁ-わをんー]+$/))
-            .filter(word => !word.match(/^([ぁ-わをんー]{1,2})\1$/))
-            .filter(word => !word.match(/^([ぁ-わをんー]{1})\1\1$/))
-            .filter(word => !word.match(/くん$/))
-            .map(word => word.split("")
-                .map(char => {
-                    if (capitalize[char]) { return capitalize[char] }
-                    else { return char }
-                })
-                .join("")
-            )
+        const quality_words = Array.from(new Set(
+            Object.keys(kana_kanji_dict)
+                .filter(word => word.length <= 8)
+                .filter(word => word.length >= 4)
+                .filter(word => word.match(/^[ぁ-わをんー]+$/))
+                .filter(word => !word.match(/^([ぁ-わをんー]{1,2})\1$/))
+                .filter(word => !word.match(/^([ぁ-わをんー]{1})\1\1$/))
+                .filter(word => !word.match(/くん$/))
+        ))
 
-        const valid_words = Array.from(new Set(lines2))
+        const char_freq = {}
+        quality_words.reduce((a, b) => a + b).split('').forEach(char => {
+            char_freq[char] = char_freq[char] == null ? 1 : char_freq[char] + 1
+        })
 
-        const characters = valid_words.reduce((a, b) => a + b)
-        const note = {}
-        for (let i = 0; i < characters.length; i++) {
-            const char = characters[i]
-            let char_count = note[char] == null ? 1 : note[char] + 1
-            note[char] = char_count
-        }
-        return [valid_words, note, r_dict]
+        return [quality_words, char_freq, kana_kanji_dict]
     }
-
-    return fetch('dic-nico-intersection-pixiv.txt')
-        .then(async response => [words, char_dict, reverse_dict] = load(await response.text()))
-        .then(() => generate_crossword(false, char_count, words, char_dict))
 }
 
-function generate_crossword(isConsole, char_count, words, char_dict) {
+function generate_crossword(number_of_char_types, words, char_freq) {
     function choose_n(arr, num) {
         function choose(arr) {
             const total = Object.values(arr).reduce((a, b) => a + b)
@@ -89,11 +83,9 @@ function generate_crossword(isConsole, char_count, words, char_dict) {
         return ret_arr
     }
 
-    const n_char = choose_n(char_dict, char_count)
+    const n_char = choose_n(char_freq, number_of_char_types)
 
     const filtered_words = words.filter(word => word.split("").map(c => n_char.includes(c)).reduce((a, b) => a && b))
-
-    // visualize
 
     function convert_to_json(word_list) {
         var json_data = [];
@@ -105,18 +97,13 @@ function generate_crossword(isConsole, char_count, words, char_dict) {
 
         return json_data;
     }
+    
+    const table = clg.generateLayout(convert_to_json(filtered_words)).table
 
-    const input_json = convert_to_json(filtered_words)
+    const char_set = new Set(table.reduce((a, b) => a.concat(b)))
+    char_set.delete(str_kuromasu)
 
-    // Output data
-    const layout = clg.generateLayout(input_json)
-
-    if (isConsole) {
-        const output_html = layout.table_string.replace(/-/g, '⬛').replace(/<br>/g, '\n')
-        console.log(output_html)
-    } else {
-        return layout.table
-    }
+    return [table, char_set]
 }
 
-export { genarate, reverse_dict }
+export { get_crossword, kana_kanji_dict, str_kuromasu }
