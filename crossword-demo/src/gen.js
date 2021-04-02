@@ -3,6 +3,7 @@ import clg from 'crossword-layout-generator'
 let isInitialized = false
 let words
 let char_dict
+let reverse_dict
 
 async function genarate(char_count) {
     if (isInitialized) return Promise.resolve(generate_crossword(false, char_count, words, char_dict))
@@ -22,6 +23,17 @@ async function genarate(char_count) {
             //'ょ': 'よ',
             'ゎ': 'わ'
         }
+
+        const r_dict = {}
+        lines.forEach(line => {
+            const spl = line.split('\t')
+            spl[0] = spl[0].split("").map(char => {
+                if (capitalize[char]) { return capitalize[char] }
+                else { return char }
+            }).join("")
+            r_dict[spl[0]] = spl[1]
+        })
+
         // [Regex Tester - Javascript, PCRE, PHP](https://www.regexpal.com/)
         const lines2 = lines.map(line => line.split('\t')[0])
             .filter(word => word.length <= 8)
@@ -32,8 +44,8 @@ async function genarate(char_count) {
             .filter(word => !word.match(/くん$/))
             .map(word => word.split("")
                 .map(char => {
-                    if (capitalize[char]) {return capitalize[char]}
-                    else {return char}
+                    if (capitalize[char]) { return capitalize[char] }
+                    else { return char }
                 })
                 .join("")
             )
@@ -47,11 +59,11 @@ async function genarate(char_count) {
             let char_count = note[char] == null ? 1 : note[char] + 1
             note[char] = char_count
         }
-        return [valid_words, note]
+        return [valid_words, note, r_dict]
     }
 
     return fetch('dic-nico-intersection-pixiv.txt')
-        .then(async response => [words, char_dict] = load(await response.text()))
+        .then(async response => [words, char_dict, reverse_dict] = load(await response.text()))
         .then(() => generate_crossword(false, char_count, words, char_dict))
 }
 
@@ -107,4 +119,4 @@ function generate_crossword(isConsole, char_count, words, char_dict) {
     }
 }
 
-export { genarate }
+export { genarate, reverse_dict }

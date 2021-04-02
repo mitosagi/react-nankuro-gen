@@ -2,40 +2,13 @@
   text-align: center;
 }
 
-.App-logo {
-  height: 40vmin;
-  pointer-events: none;
+.center {
+  display: inline-block;
+  margin: 0 auto;
 }
 
-@media (prefers-reduced-motion: no-preference) {
-  .App-logo {
-    animation: App-logo-spin infinite 20s linear;
-  }
-}
-
-.App-header {
-  background-color: #282c34;
-  min-height: 100vh;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  font-size: calc(10px + 2vmin);
-  color: white;
-}
-
-.App-link {
-  color: #61dafb;
-}
-
-@keyframes App-logo-spin {
-  from {
-    transform: rotate(0deg);
-  }
-
-  to {
-    transform: rotate(360deg);
-  }
+p {
+  text-align: left;
 }
 
 .Table {
@@ -43,6 +16,29 @@
   font-size: 24px;
   user-select: none;
   border: dashed 1px;
+}
+
+@for $l from 1 through 50 {
+  @for $d from 1 through 50 {
+    .complete .row:nth-child(#{$l}) .item:nth-child(#{$d}) {
+      animation-name: dot-scaling-one;
+      animation-duration: 4s;
+      animation-iteration-count: infinite;
+      animation-delay: #{($d * 0.1) + (($l - 1) * 0.1)}s;
+    }
+  }
+}
+
+@keyframes dot-scaling-one {
+  0% {
+    opacity: 0.33;
+  }
+  90% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 0.33;
+  }
 }
 
 @for $l from 1 through 50 {
@@ -74,10 +70,6 @@
 .blue {
   color: blue;
   border-color: black;
-}
-
-.complete {
-  background-color: grey;
 }
 
 .disabled {
