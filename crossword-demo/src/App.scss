@@ -2,26 +2,50 @@
   text-align: center;
 }
 
-.center {
-  display: inline-block;
-  margin: 0 auto;
+.desc {
+  width: fit-content;
+  margin: 16px auto;
 }
 
-.desc {
+.desc p {
   text-align: left;
   white-space: pre;
 }
 
-.Table {
+.cw-board {
+  outline: solid 3px;
+  outline-offset: -1px;
+  width: fit-content;
+  margin: 16px auto;
+}
+
+.cw-row {
+  width: fit-content;
+}
+
+.cw-cell {
   font-family: monospace;
   font-size: 24px;
   user-select: none;
   border: dashed 1px;
 }
 
+.cw-cell_selected {
+  background-color: #66CCCC
+}
+
+.solved .cw-cell_selected {
+  background-color: transparent
+}
+
+.cw-cell_color-ans {
+  color: blue;
+  border-color: black;
+}
+
 @for $l from 1 through 50 {
   @for $d from 1 through 50 {
-    .complete .row:nth-child(#{$l}) .item:nth-child(#{$d}) {
+    .solved .cw-row:nth-child(#{$l}) .cw-cell:nth-child(#{$d}) {
       animation-name: dot-scaling-one;
       animation-duration: 4s;
       animation-iteration-count: infinite;
@@ -34,16 +58,18 @@
   0% {
     opacity: 0.33;
   }
+
   90% {
     opacity: 1;
   }
+
   100% {
     opacity: 0.33;
   }
 }
 
 @for $l from 1 through 50 {
-  .row:nth-child(#{$l}) {
+  .cw-row:nth-child(#{$l}) {
     animation: fadein #{($l - 1) * 0.1}s;
   }
 }
@@ -58,34 +84,27 @@
   }
 }
 
+.solved .show-before-clear {
+  display: none;
+}
 
-.selected {
-  background-color: #66CCCC
+.show-after-clear {
+  display: none;
+}
+
+.solved .show-after-clear {
+  display: block;
 }
 
 .keyboard {
-  margin: 0 auto;
+  margin: 16px auto;
   width: 500px;
 }
 
-.blue {
-  color: blue;
-  border-color: black;
-}
-
-.disabled {
+.disabled_hint {
   background-color: lightgrey !important;
-}
-
-.Table .box {
-  background-color: black;
-  /* color: white; */
 }
 
 .disabled_ans {
   background-color: lightblue !important;
 }
-
-/* .row {
-  line-height: 1
-} */

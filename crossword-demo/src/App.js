@@ -21,21 +21,19 @@ class Cell extends Component {
   render() {
     const text = this.props.text
     let render_text = text
-    let color = "black"
-    let box = false
+    let color_ans = false
     if (text === str_kuromasu) {
       render_text = '■'
-      box = true
     } else if (this.props.char_hint[text] !== "") {
       render_text = this.props.char_hint[text]
     } else if (this.props.char_ans[text] !== "") {
       render_text = this.props.char_ans[text]
-      color = "blue"
-    }else{
+      color_ans = true
+    } else {
       render_text = "　"
     }
     return (
-      <span className={"Table" + ((text === this.props.char_selected) ? " selected" : "") + ((color === "blue") ? " blue" : "") + ((box) ? " box" : "")}
+      <span className={((text === this.props.char_selected) ? " cw-cell_selected" : "") + (color_ans ? " cw-cell_color-ans" : "")}
         onClick={() => this.props.clicked(text)}>{render_text}</span>
     );
   }
@@ -47,7 +45,8 @@ class App extends Component {
     this.state = { cw_board: [], char_hint: {}, char_ans: {}, char_selected: "", solved: false, dict_link: [["", ""], ["", ""]] };
   }
 
-  async componentDidMount() {
+  init_board = async () => {
+    this.setState({ cw_board: [], char_hint: {}, char_ans: {}, char_selected: "", solved: false, dict_link: [["", ""], ["", ""]] });
     const [cw_board, char_set] = await get_crossword(number_of_char_types)
 
     const char_hint = {}
@@ -61,7 +60,11 @@ class App extends Component {
       char_hint[Object.keys(char_hint)[i]] = ""
     }
 
-    this.setState({ cw_board: cw_board, char_hint: char_hint, char_ans: char_ans });
+    this.setState({ cw_board: cw_board, char_hint: char_hint, char_ans: char_ans, char_selected: "", solved: false, dict_link: [["", ""], ["", ""]] });
+  }
+
+  async componentDidMount() {
+    this.init_board()
   }
 
   mouseEnter = (i, j) => {
@@ -98,27 +101,37 @@ class App extends Component {
 
   render() {
     return (
-      <div className="App">
-        <div className="center">
-          <p className="desc">
+      <div className={"App" + ((this.state.solved) ? " solved" : "")}>
+        <div className="desc">
+          <h1>
+            ナンクロ　nico-pixiv
+          </h1>
+          <p>
             {game_desc}
           </p>
-          <div className={"column" + ((this.state.solved) ? " complete" : "")}>
-            {this.state.cw_board.map((row, i) =>
-              <div key={i} className={"row"}>
-                {row.map((square, j) =>
-                  <span className={"item"} onMouseEnter={() => this.mouseEnter(i, j)}>
-                    <Cell key={j} text={square} char_hint={this.state.char_hint} char_ans={this.state.char_ans} clicked={this.clicked} char_selected={this.state.char_selected}></Cell>
-                  </span>
-                )}
-              </div>
-            )}
-          </div>
+        </div>
+        <div className={"cw-board"}>
+          {this.state.cw_board.map((row, i) =>
+            <div key={i} className={"cw-row"}>
+              {row.map((square, j) =>
+                <span className={"cw-cell"} onMouseEnter={() => this.mouseEnter(i, j)}>
+                  <Cell key={j} text={square} char_hint={this.state.char_hint} char_ans={this.state.char_ans} clicked={this.clicked} char_selected={this.state.char_selected}></Cell>
+                </span>
+              )}
+            </div>
+          )}
+        </div>
+        <div className="show-after-clear">
+          <button onClick={async () => this.init_board()}>次の問題</button>
+          <div><a href={this.state.dict_link[0][1]}>{"ヨコ: " + this.state.dict_link[0][0]}</a></div>
+          <div><a href={this.state.dict_link[1][1]}>{"タテ: " + this.state.dict_link[1][0]}</a></div>
+        </div>
+        <div className="show-before-clear">
           <div className="keyboard">
             <Keyboard onKeyPress={input => this.onKeyPress(input)} layout={{ default: kana50 }}
               buttonTheme={[
                 {
-                  class: "disabled",
+                  class: "disabled_hint",
                   buttons: Object.values(this.state.char_hint).join(" ")
                 },
                 {
@@ -127,8 +140,7 @@ class App extends Component {
                 }
               ]}></Keyboard>
           </div>
-          <div><a href={this.state.dict_link[0][1]}>{"ヨコ: " + this.state.dict_link[0][0]}</a></div>
-          <div><a href={this.state.dict_link[1][1]}>{"タテ: " + this.state.dict_link[1][0]}</a></div>
+          <button onClick={async () => this.init_board()}>次の問題</button>
         </div>
       </div>
     );

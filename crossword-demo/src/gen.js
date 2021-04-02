@@ -63,6 +63,7 @@ async function get_crossword(number_of_char_types) {
 
 function generate_crossword(number_of_char_types, words, char_freq) {
     function choose_n(arr, num) {
+        const copy_arr = {...arr}
         function choose(arr) {
             const total = Object.values(arr).reduce((a, b) => a + b)
             const arrow = Math.random() * total;
@@ -75,8 +76,8 @@ function generate_crossword(number_of_char_types, words, char_freq) {
 
         const ret_arr = []
         for (let i = 0; i < num; i++) {
-            const choosed = choose(arr)
-            delete arr[choosed]
+            const choosed = choose(copy_arr)
+            delete copy_arr[choosed]
             ret_arr.push(choosed)
         }
 
