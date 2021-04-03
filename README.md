@@ -1,6 +1,6 @@
 # React Nankuro (Number Crossword) Generator
 
-ブラウザですぐにプレイできます。
+[ブラウザですぐにプレイできます。](https://mitosagi.github.io/react-nankuro-gen/)
 
 ![image-20210403104525459](./image-20210403104525459.png)
 
